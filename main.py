@@ -142,8 +142,8 @@ class Aplicacion():
         temp_msg = self.mensajeEnviado.get()
         n_temp = self.n.get()
         k_temp = self.k.get()
-        #cadena_encrypt = './sendData' + ' ' + temp_msg + ' ' + n_temp + ' ' +k_temp
-        #print(cadena_encrypt)
+        # cadena_encrypt = './sendData' + ' ' + n_temp + ' ' + k_temp + ' ' +temp_msg
+        # print(cadena_encrypt)
         result = subprocess.run(['./sendData', n_temp, k_temp, temp_msg], stdout=subprocess.PIPE)
         display = result.stdout.decode("utf-8")
         print(display)

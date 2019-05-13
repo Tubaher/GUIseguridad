@@ -42,9 +42,9 @@ class Aplicacion():
         self.dencryptedMessage = StringVar()
         self.encryptedMessage = StringVar()
 
-        self.labelEncryptedMsg = ttk.Label(self.raiz, textvariable=self.dencryptedMessage,
+        self.labelEncryptedMsg = ttk.Label(self.raiz, textvariable=self.encryptedMessage,
                                          font=fuente)
-        self.labelDecryptMsg = ttk.Label(self.raiz, textvariable=self.encryptedMessage ,
+        self.labelDecryptMsg = ttk.Label(self.raiz, textvariable=self.dencryptedMessage ,
                                   font=fuente) 
 
         self.n = StringVar()
@@ -58,11 +58,14 @@ class Aplicacion():
         # Se definen dos botones con dos métodos: El botón
         # 'Aceptar' llamará al método 'self.aceptar' cuando
         # sea presionado para validar la contraseña; y el botón
-        # 'Cancelar' finalizará la aplicación si se llega a
+        # 'Cancelar' finalizará la aplicación si se llega abu
         # presionar:
 
-        self.btnDecrypt = ttk.Button(self.raiz, text="Decrypth Message",
+        self.btnDecrypt = ttk.Button(self.raiz, text="Run Server",
                                         command=self.cmdDecryptMessg)
+        
+        self.btnRunDecrypt = ttk.Button(self.raiz, text="Run Server Decrypt",
+                                        command=self.cmdRunDecryptMessg)
 
 
 
@@ -75,8 +78,8 @@ class Aplicacion():
         self.labeln = ttk.Label(self.framen, text="n", width=4) 
         self.labeln.pack(side=LEFT ,padx=5, pady=5)
 
-        self.entryn = ttk.Entry(self.framen,textvariable=self.n)
-        self.entryn.pack(fill=X, expand=True, padx=5, pady=5)
+        self.labelnValue = ttk.Label(self.framen,textvariable=self.n, width=4)
+        self.labelnValue.pack(fill=X, expand=True, padx=5, pady=5)
 
         self.framek = ttk.Frame(self.raiz)
         self.framek.pack(fill=X)
@@ -84,8 +87,8 @@ class Aplicacion():
         self.labelk = ttk.Label(self.framek, text="k", width=4) 
         self.labelk.pack(side=LEFT ,padx=5, pady=5)
 
-        self.entryk = ttk.Entry(self.framek,textvariable=self.k)
-        self.entryk.pack(fill=X, expand=True, padx=5, pady=5)
+        self.labelkValue = ttk.Label(self.framek,textvariable=self.k, width=4)
+        self.labelkValue.pack(fill=X, expand=True, padx=5, pady=5)
 
         self.framej = ttk.Frame(self.raiz)
         self.framej.pack(fill=X)
@@ -93,13 +96,15 @@ class Aplicacion():
         self.labelj = ttk.Label(self.framej, text="j", width=4) 
         self.labelj.pack(side=LEFT ,padx=5, pady=5)
 
-        self.entryj = ttk.Entry(self.framej,textvariable=self.j)
-        self.entryj.pack(fill=X, expand=True, padx=5, pady=5)
+        self.labeljValue = ttk.Label(self.framej,textvariable=self.j, width=4)
+        self.labeljValue.pack(fill=X, expand=True, padx=5, pady=5)
 
         self.labelEncrypted.pack(fill=X,padx=5, pady=5)
         self.labelEncryptedMsg.pack(fill=X,padx=5, pady=5)
 
         self.btnDecrypt.pack(fill=X,padx=5, pady=5)
+        self.btnRunDecrypt.pack(fill=X,padx=5, pady=5)
+
 
         self.labelDecrypt.pack(fill=X,padx=5, pady=5)
         self.labelDecryptMsg.pack(fill=X,padx=5, pady=5)
@@ -127,12 +132,23 @@ class Aplicacion():
     # mismo lugar.
 
     def cmdDecryptMessg(self):
-        result = subprocess.run(['./sendData', n_temp, k_temp, temp_msg], stdout=subprocess.PIPE)
+        p1='5915587277'
+        p2='1500450271'
+        result = subprocess.run(['./Sockets', p1, p2], stdout=subprocess.PIPE)
         display = result.stdout.decode("utf-8")
-        print(display)
-        temp_msg = self.dencryptedMessage.get()
+        #print(display)
+        display = display.split(' ')[2:]
+        display[0] = display[0].split('\n')[1]
+        display[2] = display[2].split('\n')[0]
+        
+        #seteo las llaves
+        self.n.set(display[0])
+        self.k.set(display[1])
+        self.j.set(display[2])
+        #print(display)
+        """ temp_msg = self.dencryptedMessage.get()
         n_temp = self.n.get()
-        k_temp = self.k.get()
+        k_temp = self.k.get() """
         #cadena_encrypt = './sendData' + ' ' + temp_msg + ' ' + n_temp + ' ' +k_temp
         #print(cadena_encrypt)
        
@@ -140,14 +156,33 @@ class Aplicacion():
 
         #pass
 
-    def getPublicKeys(self):
-        result = subprocess.run(['./getPublicKey'], stdout=subprocess.PIPE)
+    
+    def cmdRunDecryptMessg(self):
+        p1='5915587277'
+        p2='1500450271'
+        result = subprocess.run(['./Sockets', p1, p2], stdout=subprocess.PIPE)
         display = result.stdout.decode("utf-8")
+        display = display.split('\n')[2:len(display)-2]
+        self.encryptedMessage.set(display[0])
+        self.dencryptedMessage.set(display[1])
+        print(display)
+        # display = display.split(' ')[2:]
+        # display[0] = display[0].split('\n')[1]
+        # display[2] = display[2].split('\n')[0]
+        
+        #seteo las llaves
+        # self.n.set(display[0])
+        # self.k.set(display[1])
+        # self.j.set(display[2])
         #print(display)
-        pbKeys = display.split("\n")[0].split(" ")
-        #print(pbKeys)
-        self.pbKeysDis.set(display)
-        return self.n.set(pbKeys[0]), self.k.set(pbKeys[1])
+        """ temp_msg = self.dencryptedMessage.get()
+        n_temp = self.n.get()
+        k_temp = self.k.get() """
+        #cadena_encrypt = './sendData' + ' ' + temp_msg + ' ' + n_temp + ' ' +k_temp
+        #print(cadena_encrypt)
+
+        #pbKeys = display.split("\n")[0].split(" ")
+        #pass
     
     def iniSockets(self):
         pass
