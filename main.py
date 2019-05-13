@@ -154,7 +154,7 @@ class Aplicacion():
     def getPublicKeys(self):
         result = subprocess.run(['./getPublicKey'], stdout=subprocess.PIPE)
         display = result.stdout.decode("utf-8")
-        #print(display)
+        print(display)
         pbKeys = display.split("\n")[0].split(" ")
         #print(pbKeys)
         self.pbKeysDis.set(display)
