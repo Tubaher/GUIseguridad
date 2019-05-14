@@ -27,14 +27,14 @@ class Aplicacion():
         # Define las etiquetas que acompañan a las cajas de
         # entrada y asigna el formato de fuente anterior:
 
-        self.labelParameters = ttk.Label(self.raiz, text="Insert Parameters",
+        self.labelParameters = ttk.Label(self.raiz, text="Parameters",
                                   font=fuente)        
         self.labelEncrypted = ttk.Label(self.raiz, text="Encrypted Message",
                                          font=fuente)
         self.labelDecrypt = ttk.Label(self.raiz, text="Decrypted Message",
                                   font=fuente)    
                       
-                   
+        self.labelInsertPrime = ttk.Label(self.raiz, text="Insert the prime numbers", font=fuente)             
 
         # Declara dos variables de tipo cadena para contener
         # el usuario y la contraseña:
@@ -42,14 +42,13 @@ class Aplicacion():
         self.dencryptedMessage = StringVar()
         self.encryptedMessage = StringVar()
 
-        self.labelEncryptedMsg = ttk.Label(self.raiz, textvariable=self.encryptedMessage,
-                                         font=fuente)
-        self.labelDecryptMsg = ttk.Label(self.raiz, textvariable=self.dencryptedMessage ,
-                                  font=fuente) 
 
         self.n = StringVar()
         self.k = StringVar()
         self.j = StringVar()
+
+        self.p1 = StringVar()
+        self.p2 = StringVar()
 
                      
         self.separ1 = ttk.Separator(self.raiz, orient=HORIZONTAL)
@@ -99,16 +98,50 @@ class Aplicacion():
         self.labeljValue = ttk.Label(self.framej,textvariable=self.j, width=4)
         self.labeljValue.pack(fill=X, expand=True, padx=5, pady=5)
 
-        self.labelEncrypted.pack(fill=X,padx=5, pady=5)
-        self.labelEncryptedMsg.pack(fill=X,padx=5, pady=5)
+        self.labelInsertPrime.pack(fill=X,padx=5, pady=5)
 
+        self.entryPrime1 = ttk.Entry(self.raiz,textvariable=self.p1)
+        self.entryPrime1.pack(fill=X,expand=True, padx=5, pady=5)
+
+        self.entryPrime2 = ttk.Entry(self.raiz,textvariable=self.p2)
+        self.entryPrime2.pack(fill=X,expand=True, padx=5, pady=5)
+
+        self.labelEncrypted.pack(fill=X,padx=5, pady=5)
+
+# mytext = tk.StringVar(value='test ' * 30)
+
+# myframe = ttk.Frame(root)
+# myentry = ttk.Entry(myframe, textvariable=mytext, state='readonly')
+# myscroll = ttk.Scrollbar(myframe, orient='horizontal', command=myentry.xview)
+# myentry.config(xscrollcommand=myscroll.set)
+
+# myframe.grid()
+# myentry.grid(row=1, sticky='ew')
+# myscroll.grid(row=2, sticky='ew')
+        self.frameEncryptedMsg = ttk.Frame(self.raiz)
+        self.labelEncryptedMsg = ttk.Entry(self.frameEncryptedMsg, textvariable=self.encryptedMessage,
+                                         font=fuente, state='readonly')
+        self.scrllEncryptedMsg = ttk.Scrollbar(self.frameEncryptedMsg,orient='vertical',command=self.labelEncryptedMsg.xview)
+        self.labelEncryptedMsg.config(xscrollcommand=self.scrllEncryptedMsg.set)
+        self.frameEncryptedMsg.pack(fill=X)
+        self.scrllEncryptedMsg.pack(side=LEFT ,padx=5, pady=5)
+        self.labelEncryptedMsg.pack(fill=X, expand=True, padx=5, pady=5)
+  
         self.btnDecrypt.pack(fill=X,padx=5, pady=5)
         self.btnRunDecrypt.pack(fill=X,padx=5, pady=5)
 
 
         self.labelDecrypt.pack(fill=X,padx=5, pady=5)
-        self.labelDecryptMsg.pack(fill=X,padx=5, pady=5)
 
+        self.frameDencryptedMsg = ttk.Frame(self.raiz)
+        self.labelDecryptMsg = ttk.Entry(self.frameDencryptedMsg, textvariable=self.dencryptedMessage ,
+                                  font=fuente, state='readonly') 
+        self.scrllDencryptedMsg = ttk.Scrollbar(self.frameDencryptedMsg,orient='vertical',command=self.labelDecryptMsg.xview)
+        self.labelDecryptMsg.config(xscrollcommand=self.scrllDencryptedMsg.set)
+        self.frameDencryptedMsg.pack(fill=X)
+        self.scrllDencryptedMsg.pack(side=LEFT ,padx=5, pady=5)
+        self.labelDecryptMsg.pack(fill=X, expand=True, padx=5, pady=5)
+  
 
         
 
@@ -132,8 +165,10 @@ class Aplicacion():
     # mismo lugar.
 
     def cmdDecryptMessg(self):
-        p1='5915587277'
-        p2='1500450271'
+        # p1='5915587277'
+        # p2='1500450271'
+        p1 = self.p1.get()
+        p2 = self.p2.get()
         result = subprocess.run(['./Sockets', p1, p2], stdout=subprocess.PIPE)
         display = result.stdout.decode("utf-8")
         #print(display)
